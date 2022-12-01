@@ -1,0 +1,17 @@
+[package]
+name = "aventofcode"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[[bin]]
+name="day1star1"
+path="src/day1star1/main.rs"
+
+
+[[bin]]
+name="day1star2"
+path="src/day1star2/main.rs"
