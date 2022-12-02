@@ -37,6 +37,7 @@ NB: Puzzle inputs differ by user. Please log in to get your puzzle input.
 ## Day 1
 
 See instructions [here](https://adventofcode.com/2022/day/1)
+
 Input : data/day1star1.txt
 
 ### Step 1
