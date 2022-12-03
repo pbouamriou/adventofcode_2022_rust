@@ -15,3 +15,11 @@ path="src/day1star1/main.rs"
 [[bin]]
 name="day1star2"
 path="src/day1star2/main.rs"
+
+[[bin]]
+name="day2star1"
+path="src/day2star1/main.rs"
+
+[[bin]]
+name="day2star2"
+path="src/day2star2/main.rs"

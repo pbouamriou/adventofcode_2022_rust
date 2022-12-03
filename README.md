@@ -5,7 +5,7 @@
 | Day | Step 1 | Step 2 |
 | :-: | :----: | :----: |
 |  1  |   ⭐   |   ⭐   |
-|  2  |        |        |
+|  2  |   ⭐   |   ⭐   |
 |  3  |        |        |
 |  4  |        |        |
 |  5  |        |        |
@@ -38,7 +38,21 @@ NB: Puzzle inputs differ by user. Please log in to get your puzzle input.
 
 See instructions [here](https://adventofcode.com/2022/day/1)
 
-Input : data/day1star1.txt
+Input : data/day1.txt
+
+### Step 1
+
+Completed ⭐
+
+### Step 2
+
+Completed ⭐
+
+## Day 2
+
+See instructions [here](https://adventofcode.com/2022/day/2)
+
+Input : data/day2.txt
 
 ### Step 1
 
