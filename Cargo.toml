@@ -23,3 +23,11 @@ path="src/day2star1/main.rs"
 [[bin]]
 name="day2star2"
 path="src/day2star2/main.rs"
+
+[[bin]]
+name="day3star1"
+path="src/day3star1/main.rs"
+
+[[bin]]
+name="day3star2"
+path="src/day3star2/main.rs"
