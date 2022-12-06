@@ -6,8 +6,6 @@ defaults:
     shell: bash
 
 jobs:
-
-  # Check non-regression tests
   test:
     runs-on: ubuntu-latest
     steps:
