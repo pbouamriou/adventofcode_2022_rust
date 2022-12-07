@@ -10,7 +10,7 @@
 |  4  |   ⭐   |   ⭐   |
 |  5  |   ⭐   |   ⭐   |
 |  6  |   ⭐   |   ⭐   |
-|  7  |        |        |
+|  7  |   ⭐   |        |
 |  8  |        |        |
 |  9  |        |        |
 | 10  |        |        |
@@ -117,3 +117,15 @@ Completed ⭐
 ### Step 2
 
 Completed ⭐
+
+## Day 7
+
+See instructions [here](https://adventofcode.com/2022/day/7)
+
+Input : data/day7.txt
+
+### Step 1
+
+Completed ⭐
+
+### Step 2

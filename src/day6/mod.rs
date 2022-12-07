@@ -41,8 +41,6 @@ fn find_start_of_sequence(
 
 #[cfg(test)]
 mod test {
-    use std::io::Lines;
-
     use super::*;
     use crate::testtools::*;
 
