@@ -206,6 +206,14 @@ impl FileSystem {
         let mut vec_dirs = vec![];
         let mut current_node = self.root_node.clone();
 
+        {
+            let current_node_borrow = current_node.borrow();
+            result.push((
+                current_node_borrow.name().to_string(),
+                current_node_borrow.size(),
+            ));
+        }
+
         loop {
             match &*current_node.borrow() {
                 Node::Dir(_, childs) => {
@@ -237,6 +245,24 @@ impl FileSystem {
             .iter()
             .filter(|(_, size)| size <= &100000)
             .fold(0, |accu, (_, size)| accu + size)
+    }
+
+    pub fn max_directory_size(&self) -> usize {
+        self.size_of_directories()
+            .iter()
+            .fold(0, |accu, (_, size)| if accu > *size { accu } else { *size })
+    }
+
+    pub fn directory_size_to_delete(&self) -> usize {
+        let total_size = self.max_directory_size();
+        let min_size_to_delete = 30000000 - (70000000 - total_size);
+        self.size_of_directories()
+            .iter()
+            .filter(|(_, size)| *size >= min_size_to_delete)
+            .fold(
+                total_size,
+                |accu, (_, size)| if *size < accu { *size } else { accu },
+            )
     }
 }
 
