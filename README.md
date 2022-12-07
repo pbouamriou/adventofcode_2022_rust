@@ -9,7 +9,7 @@
 |  3  |   ⭐   |   ⭐   |
 |  4  |   ⭐   |   ⭐   |
 |  5  |   ⭐   |   ⭐   |
-|  6  |        |        |
+|  6  |   ⭐   |   ⭐   |
 |  7  |        |        |
 |  8  |        |        |
 |  9  |        |        |
@@ -95,6 +95,20 @@ Completed ⭐
 See instructions [here](https://adventofcode.com/2022/day/5)
 
 Input : data/day5.txt
+
+### Step 1
+
+Completed ⭐
+
+### Step 2
+
+Completed ⭐
+
+## Day 6
+
+See instructions [here](https://adventofcode.com/2022/day/6)
+
+Input : data/day6.txt
 
 ### Step 1
 
