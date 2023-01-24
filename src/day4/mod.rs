@@ -23,7 +23,7 @@ impl SectionAssignmentRange {
     }
 
     fn parse(range_as_str: &str) -> SectionAssignmentRange {
-        let mut parts = range_as_str.split("-");
+        let mut parts = range_as_str.split('-');
         let range = parts.next().unwrap().parse::<u32>().unwrap()
             ..=parts.next().unwrap().parse::<u32>().unwrap();
         SectionAssignmentRange { range }
@@ -53,13 +53,11 @@ pub struct SectionAssignments {
 impl SectionAssignments {
     pub fn parse(lines: &mut dyn Iterator<Item = Result<String, io::Error>>) -> Self {
         let mut assignments = vec![];
-        for line in lines {
-            if let Ok(line) = line {
-                let mut parts = line.split(",");
-                let part1 = SectionAssignmentRange::parse(parts.next().unwrap());
-                let part2 = SectionAssignmentRange::parse(parts.next().unwrap());
-                assignments.push(AssignmentPair(part1, part2));
-            }
+        for line in lines.flatten() {
+            let mut parts = line.split(',');
+            let part1 = SectionAssignmentRange::parse(parts.next().unwrap());
+            let part2 = SectionAssignmentRange::parse(parts.next().unwrap());
+            assignments.push(AssignmentPair(part1, part2));
         }
 
         SectionAssignments { assignments }

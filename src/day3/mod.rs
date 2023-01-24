@@ -61,7 +61,7 @@ impl Rucksack {
         }
     }
 
-    fn find_common_item<'a>(&'a self) -> Option<&'a Item> {
+    fn find_common_item(&self) -> Option<&Item> {
         let mut found_item = None;
         for item_first_compartiment in &self.first_compartment.items {
             match self
@@ -82,7 +82,7 @@ impl Rucksack {
 
     fn iter(&self) -> RucksackIterator {
         RucksackIterator {
-            rucksack: &self,
+            rucksack: self,
             position: 0,
         }
     }
@@ -98,12 +98,7 @@ impl<'a> Iterator for RucksackIterator<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let len_first_compartment = self.rucksack.first_compartment.items.len();
         if self.position < len_first_compartment {
-            let item = self
-                .rucksack
-                .first_compartment
-                .items
-                .iter()
-                .nth(self.position);
+            let item = self.rucksack.first_compartment.items.get(self.position);
             self.position += 1;
             item
         } else {
@@ -111,8 +106,7 @@ impl<'a> Iterator for RucksackIterator<'a> {
                 .rucksack
                 .second_compartment
                 .items
-                .iter()
-                .nth(self.position - len_first_compartment);
+                .get(self.position - len_first_compartment);
             self.position += 1;
             item
         }
@@ -124,7 +118,7 @@ pub struct ElvesGroup {
 }
 
 impl ElvesGroup {
-    fn find_badge<'a>(&'a self) -> Option<&'a Item> {
+    fn find_badge(&self) -> Option<&Item> {
         let mut iter = self.rucksacks.iter();
         if let Some(firt_rucksacks) = iter.next() {
             for item_to_found in firt_rucksacks.iter() {
@@ -173,7 +167,7 @@ impl SafetySupplies {
                 group_number += 1;
             }
         }
-        if rucksacks.len() > 0 {
+        if !rucksacks.is_empty() {
             groups.push(ElvesGroup { rucksacks });
         }
 

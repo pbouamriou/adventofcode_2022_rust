@@ -72,3 +72,11 @@ path="src/day8star1/main.rs"
 [[bin]]
 name="day8star2"
 path="src/day8star2/main.rs"
+
+[[bin]]
+name="day9star1"
+path="src/day9star1/main.rs"
+
+[[bin]]
+name="day9star2"
+path="src/day9star2/main.rs"

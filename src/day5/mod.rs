@@ -80,21 +80,18 @@ impl SupplyStacks {
         let regex_move =
             regex::Regex::new(r"move\s*(?P<move>\d+)\s*from\s*(?P<from>\d+)\s*to\s*(?P<to>\d+)")
                 .unwrap();
-        for line in lines {
-            if let Ok(line) = line {
-                let names = regex_move.captures(&line);
-                if let Some(names) = names {
-                    let number_of_moves =
-                        names.name("move").unwrap().as_str().parse::<u32>().unwrap();
-                    let from = names
-                        .name("from")
-                        .unwrap()
-                        .as_str()
-                        .parse::<usize>()
-                        .unwrap();
-                    let to = names.name("to").unwrap().as_str().parse::<usize>().unwrap();
-                    self.apply_move(number_of_moves, from - 1, to - 1, &move_method);
-                }
+        for line in lines.flatten() {
+            let names = regex_move.captures(&line);
+            if let Some(names) = names {
+                let number_of_moves = names.name("move").unwrap().as_str().parse::<u32>().unwrap();
+                let from = names
+                    .name("from")
+                    .unwrap()
+                    .as_str()
+                    .parse::<usize>()
+                    .unwrap();
+                let to = names.name("to").unwrap().as_str().parse::<usize>().unwrap();
+                self.apply_move(number_of_moves, from - 1, to - 1, move_method);
             }
         }
     }
@@ -152,17 +149,15 @@ impl SupplyStacks {
     ) -> Vec<Stack> {
         let mut dimension: usize = 0;
         let mut temp_vec = vec![];
-        for line in lines {
-            if let Ok(mut line) = line {
-                let token = Self::parse_header_line(&mut line);
-                match token {
-                    LineType::Crate(crate_vec) => {
-                        temp_vec.push(crate_vec);
-                    }
-                    LineType::Index(index) => dimension = index,
-                    LineType::Empty => break,
-                    _ => {}
+        for line in lines.flatten() {
+            let token = Self::parse_header_line(&line);
+            match token {
+                LineType::Crate(crate_vec) => {
+                    temp_vec.push(crate_vec);
                 }
+                LineType::Index(index) => dimension = index,
+                LineType::Empty => break,
+                _ => {}
             }
         }
 
@@ -202,18 +197,21 @@ impl SupplyStacks {
                         }
                         _ => {}
                     },
-                    ParseTokenState::BeginCrate => match char {
-                        'A'..='Z' => token_state = ParseTokenState::InCrate(char),
-                        _ => {}
-                    },
-                    ParseTokenState::InCrate(crate_id) => match char {
-                        ']' => token_state = ParseTokenState::EndCrate(crate_id),
-                        _ => {}
-                    },
-                    ParseTokenState::BeginIndex(number) => match char {
-                        ' ' => token_state = ParseTokenState::EndIndex(number),
-                        _ => {}
-                    },
+                    ParseTokenState::BeginCrate => {
+                        if let 'A'..='Z' = char {
+                            token_state = ParseTokenState::InCrate(char);
+                        }
+                    }
+                    ParseTokenState::InCrate(crate_id) => {
+                        if let ']' = char {
+                            token_state = ParseTokenState::EndCrate(crate_id);
+                        }
+                    }
+                    ParseTokenState::BeginIndex(number) => {
+                        if let ' ' = char {
+                            token_state = ParseTokenState::EndIndex(number);
+                        }
+                    }
                     ParseTokenState::EndLine => {}
                     ParseTokenState::EndIndex(_) => {}
                     ParseTokenState::EndCrate(_) => {}
@@ -261,11 +259,7 @@ impl SupplyStacks {
                 }
                 _ => {}
             }
-            if let Some(_) = chars.next() {
-                true
-            } else {
-                false
-            }
+            matches!(chars.next(), Some(_))
         } {}
         result
     }

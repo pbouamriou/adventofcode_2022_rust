@@ -7,19 +7,15 @@ pub struct TreeMap {
 impl TreeMap {
     pub fn parse(lines: &mut dyn Iterator<Item = Result<String, io::Error>>) -> Self {
         let mut tree_map = Self::empty();
-        let mut x_index = 0;
         let mut y_index = 0;
 
-        for line in lines {
-            if let Ok(line) = line {
-                for character in line.chars() {
-                    let value = character.to_digit(10).unwrap();
-                    tree_map.set(x_index, y_index, value);
-                    y_index += 1;
-                }
-                y_index = 0;
+        for (x_index, line) in lines.flatten().enumerate() {
+            for character in line.chars() {
+                let value = character.to_digit(10).unwrap();
+                tree_map.set(x_index, y_index, value);
+                y_index += 1;
             }
-            x_index += 1;
+            y_index = 0;
         }
 
         tree_map
@@ -29,7 +25,7 @@ impl TreeMap {
         Self { map: vec![] }
     }
 
-    fn get<'a>(&'a self, x: usize, y: usize) -> Option<&'a u32> {
+    fn get(&self, x: usize, y: usize) -> Option<&u32> {
         if let Some(y_vector) = self.map.get(x) {
             if let Some(value) = y_vector.get(y) {
                 return Some(value);
@@ -62,11 +58,7 @@ impl TreeMap {
     }
 
     fn y_dimension(&self) -> Option<usize> {
-        if let Some(y_vector) = self.map.get(0) {
-            Some(y_vector.len())
-        } else {
-            None
-        }
+        self.map.get(0).map(|y_vector| y_vector.len())
     }
 
     pub fn how_many_trees_visible(&self) -> usize {

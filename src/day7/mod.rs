@@ -20,7 +20,7 @@ impl Node {
         }
     }
 
-    pub fn name<'a>(&'a self) -> &'a str {
+    pub fn name(&self) -> &str {
         match self {
             Self::Dir(ref name, _) => name,
             Self::File(ref name, _) => name,
@@ -57,7 +57,7 @@ impl Node {
         }
     }
 
-    pub fn append_dir<'a>(&'a mut self, dir_name: &str) -> Option<Rc<RefCell<Node>>> {
+    pub fn append_dir(&mut self, dir_name: &str) -> Option<Rc<RefCell<Node>>> {
         match self {
             Self::Dir(_, childs) => {
                 let found;
@@ -87,11 +87,11 @@ impl Node {
         }
     }
 
-    pub fn node_from_path<'a>(
+    pub fn node_from_path(
         root_node: Rc<RefCell<Node>>,
         path: &VecDeque<String>,
     ) -> Option<Rc<RefCell<Node>>> {
-        if path.len() == 0 {
+        if path.is_empty() {
             return Some(root_node);
         }
         let current_node = root_node;
@@ -100,7 +100,7 @@ impl Node {
             match &*current_node.borrow() {
                 Node::Dir(_, childs) => {
                     for child in childs.borrow().iter() {
-                        if child.borrow().name() == name && path.len() == 0 {
+                        if child.borrow().name() == name && path.is_empty() {
                             return Some(child.clone());
                         }
                         match &*child.borrow() {
@@ -162,39 +162,37 @@ impl FileSystem {
         let regex_dir = regex::Regex::new(r"dir\s+(?P<name>[a-zA-Z.]+)").unwrap();
         let mut current_command = CurrentCommand::None;
         let mut path = VecDeque::<String>::new();
-        for line in lines {
-            if let Ok(line) = line {
-                if let Some(captures) = regex_cd.captures(&line) {
-                    // Cd command
-                    match captures.name("param").unwrap().as_str() {
-                        ".." => {
-                            if path.len() > 0 {
-                                path.pop_back();
-                            }
+        for line in lines.flatten() {
+            if let Some(captures) = regex_cd.captures(&line) {
+                // Cd command
+                match captures.name("param").unwrap().as_str() {
+                    ".." => {
+                        if !path.is_empty() {
+                            path.pop_back();
                         }
-                        "/" => path.clear(),
-                        name => path.push_back(name.to_string()),
                     }
-                } else if let Some(_) = regex_ls.captures(&line) {
-                    current_command = CurrentCommand::Listing;
-                } else if current_command == CurrentCommand::Listing {
-                    if let Some(captures) = regex_file.captures(&line) {
-                        let size = captures
-                            .name("size")
-                            .unwrap()
-                            .as_str()
-                            .parse::<usize>()
-                            .unwrap();
-                        let name = captures.name("name").unwrap().as_str();
+                    "/" => path.clear(),
+                    name => path.push_back(name.to_string()),
+                }
+            } else if regex_ls.captures(&line).is_some() {
+                current_command = CurrentCommand::Listing;
+            } else if current_command == CurrentCommand::Listing {
+                if let Some(captures) = regex_file.captures(&line) {
+                    let size = captures
+                        .name("size")
+                        .unwrap()
+                        .as_str()
+                        .parse::<usize>()
+                        .unwrap();
+                    let name = captures.name("name").unwrap().as_str();
 
-                        if let Some(node) = Node::node_from_path(self.root_node.clone(), &path) {
-                            node.borrow_mut().append_file(name, size);
-                        }
-                    } else if let Some(captures) = regex_dir.captures(&line) {
-                        let name = captures.name("name").unwrap().as_str();
-                        if let Some(node) = Node::node_from_path(self.root_node.clone(), &path) {
-                            node.borrow_mut().append_dir(name);
-                        }
+                    if let Some(node) = Node::node_from_path(self.root_node.clone(), &path) {
+                        node.borrow_mut().append_file(name, size);
+                    }
+                } else if let Some(captures) = regex_dir.captures(&line) {
+                    let name = captures.name("name").unwrap().as_str();
+                    if let Some(node) = Node::node_from_path(self.root_node.clone(), &path) {
+                        node.borrow_mut().append_dir(name);
                     }
                 }
             }

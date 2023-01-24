@@ -14,22 +14,16 @@ impl Game {
             number_of_matches: 0,
             points: 0,
         };
-        for line in lines {
-            match line {
-                Ok(line) => {
-                    let mut split = line.split(' ');
-                    let first_letter = split.next().unwrap();
-                    let second_letter = split.next().unwrap();
-                    let opponent_choice =
-                        IndividualChoice::parse(first_letter.chars().next().unwrap()).unwrap();
-                    let my_choice =
-                        IndividualChoice::parse(second_letter.chars().next().unwrap()).unwrap();
-                    let points = RoundInfo::calculate_result(my_choice, opponent_choice).points();
-                    game.points += points;
-                    game.number_of_matches += 1;
-                }
-                Err(_) => {}
-            }
+        for line in lines.flatten() {
+            let mut split = line.split(' ');
+            let first_letter = split.next().unwrap();
+            let second_letter = split.next().unwrap();
+            let opponent_choice =
+                IndividualChoice::parse(first_letter.chars().next().unwrap()).unwrap();
+            let my_choice = IndividualChoice::parse(second_letter.chars().next().unwrap()).unwrap();
+            let points = RoundInfo::calculate_result(my_choice, opponent_choice).points();
+            game.points += points;
+            game.number_of_matches += 1;
         }
         game
     }
@@ -41,24 +35,17 @@ impl Game {
             number_of_matches: 0,
             points: 0,
         };
-        for line in lines {
-            match line {
-                Ok(line) => {
-                    let mut split = line.split(' ');
-                    let first_letter = split.next().unwrap();
-                    let second_letter = split.next().unwrap();
-                    let opponent_choice =
-                        IndividualChoice::parse(first_letter.chars().next().unwrap()).unwrap();
-                    let round_result =
-                        RoundResult::parse(second_letter.chars().next().unwrap()).unwrap();
-                    let my_choice =
-                        IndividualChoice::make_my_choice(&opponent_choice, &round_result);
-                    let points = RoundInfo::calculate_result(my_choice, opponent_choice).points();
-                    game.points += points;
-                    game.number_of_matches += 1;
-                }
-                Err(_) => {}
-            }
+        for line in lines.flatten() {
+            let mut split = line.split(' ');
+            let first_letter = split.next().unwrap();
+            let second_letter = split.next().unwrap();
+            let opponent_choice =
+                IndividualChoice::parse(first_letter.chars().next().unwrap()).unwrap();
+            let round_result = RoundResult::parse(second_letter.chars().next().unwrap()).unwrap();
+            let my_choice = IndividualChoice::make_my_choice(&opponent_choice, &round_result);
+            let points = RoundInfo::calculate_result(my_choice, opponent_choice).points();
+            game.points += points;
+            game.number_of_matches += 1;
         }
         game
     }
